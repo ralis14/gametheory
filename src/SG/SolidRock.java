@@ -1,8 +1,7 @@
 package SG;
 
 /**
- * Sample agent that always picks Rock (the first action). Remember to put your name in the author field,
- * change the name of the agent, and make your own solveGame(MatrixGame,PlayerNumber) method.
+ * Sample agent that always defends Target 0 and always attacks Target 0
  * @author Oscar
  * @version 2015.10.04
  */

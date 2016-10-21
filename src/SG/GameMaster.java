@@ -24,7 +24,7 @@ public class GameMaster {
 	 */
 	public static void main(String[] args) {
 		ArrayList<Player> players = new ArrayList<Player>();
-		//players.add(new UniformRandom());
+		players.add(new UniformRandom());
 		players.add(new SolidRock());
 		//add your agent(s) here
 		
