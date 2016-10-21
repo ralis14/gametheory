@@ -91,8 +91,8 @@ public class GameModel{
 	 */
 	public double[] computePayoffs(double[] c, int t){
 		double[] payoffs = new double[2];//defender payoff is zero attacker is one
-		payoffs[0] = (c[t])*UAC[t] - (1-c[t])*UAU[t];
-		payoffs[1] = (c[t])*UDC[t] - (1-c[t])*UDU[t];
+		payoffs[0] = (c[t])*UDC[t] + (1-c[t])*UDU[t];//defender payoff
+		payoffs[1] = (c[t])*UAC[t] + (1-c[t])*UAU[t];//attacker payoff
 		return payoffs;
 	}
 	/**
