@@ -28,9 +28,18 @@ public class PlayerDriver implements Runnable {
 	 */
 	public void run() {
 		try{
-			double[] ms = player.solveGame();
-			player.addStrategy(player.getGameNumber(), ms, player.getPlayerNumber());
-			state = PlayerState.COMPLETE;
+			if(player.getPlayerNumber() == 1){
+				double[] ms = player.solveGame();
+				player.addStrategy(player.getGameNumber(), ms, player.getPlayerNumber());
+				state = PlayerState.COMPLETE;
+			}
+			else{
+				int t = player.attackTarget();
+				//player.addStrategy(player.getGameNumber(), ms, player.getPlayerNumber());
+				player.setT(t);
+				state = PlayerState.COMPLETE;
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}

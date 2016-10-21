@@ -71,5 +71,16 @@ public class GameModel{
 	public int getT(){
 		return T;
 	}
-	 
+	
+	/**
+	 * compute the payoffs given a coverage and a target
+	 * @param c coverage
+	 * @param t target
+	 */
+	public double[] computePayoffs(double[] c, int t){
+		double[] payoffs = new double[2];//defender payoff is zero attacker is one
+		payoffs[0] = (c[t])*UAC[t] - (1-c[t])*UAU[t];
+		payoffs[1] = (1-c[t])*UDC[t] - (c[t])*UDU[t];
+		return payoffs;
+	}
 }

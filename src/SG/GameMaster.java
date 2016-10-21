@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class GameMaster {
 
-	private static boolean verbose = false; //Set to false if you do not want the details
-	private static int numGames = 1; //test with however many games you want
+	private static boolean verbose = true; //Set to false if you do not want the details
+	private static int numGames = 2; //test with however many games you want
 	private static boolean zeroSum = false; //when true use zero sum games, when false use general sum
 	private static ArrayList<GameModel> games = new ArrayList<GameModel>();
 	
@@ -24,7 +24,7 @@ public class GameMaster {
 	 */
 	public static void main(String[] args) {
 		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(new UniformRandom());
+		//players.add(new UniformRandom());
 		players.add(new SolidRock());
 		//add your agent(s) here
 		
@@ -34,8 +34,10 @@ public class GameMaster {
 		computeStrategies(players);
 		
 		//compute expected payoffs
-		double[][] payoffMatrix = new double[players.size()][players.size()];
-		double[] wins = new double[players.size()];
+		//double[][] payoffMatrix = new double[players.size()][players.size()];
+		double[] attackerPayoffs = new double[players.size()];
+		double[] defenderPayoffs = new double[players.size()];
+		//double[] wins = new double[players.size()];
 		int numPlayers = players.size();
 		for(int p1 = 0; p1 < numPlayers; p1++) {
 			for(int p2 = p1; p2 < numPlayers; p2++) {
@@ -45,26 +47,29 @@ public class GameMaster {
 					if(verbose)	System.out.println("Game number" + game);
 					if(verbose) System.out.println(player1.getName()+" vs "+player2.getName());
 					double[] payoffs = match(player1,player2,game);
-					updateResults(payoffMatrix,payoffs,p1,p2,wins);
+					defenderPayoffs[p1] += payoffs[0];
+					attackerPayoffs[p1] += payoffs[1];
+					//updateResults(payoffMatrix,payoffs,p1,p2,wins);
+					
 					if(verbose) System.out.println(payoffs[0]);
 					if(verbose) System.out.println(payoffs[1]);
-					if(verbose) System.out.println(player2.getName()+" vs "+player1.getName());
+					/*if(verbose) System.out.println(player2.getName()+" vs "+player1.getName());
 					payoffs = match(player2,player1,game);
 					updateResults(payoffMatrix,payoffs,p2,p1,wins);
 					if(verbose) System.out.println(payoffs[0]);
 					if(verbose) System.out.println(payoffs[1]);
-					if(verbose) System.out.println();
+					if(verbose) System.out.println();*/
 				}
 			}
 		}
 		//average the payoff matrix
-		for(int i = 0; i < payoffMatrix.length; i++)
+		/*for(int i = 0; i < payoffMatrix.length; i++)
 			for(int j= 0; j < payoffMatrix[i].length; j++)
 				payoffMatrix[i][j] = payoffMatrix[i][j]/(2*numGames*payoffMatrix.length);	
-		if(verbose) printMatrix(payoffMatrix,players);
+		if(verbose) printMatrix(payoffMatrix,players);*/
 		
 		//compute results
-		double[] expPayoff = calculateAverageExpectedPayoffs(payoffMatrix);
+		/*double[] expPayoff = calculateAverageExpectedPayoffs(payoffMatrix);
 		double[] regrets = calculateRegrets(payoffMatrix);
 		double[] stabilities = calculateStabilities(payoffMatrix);
 		double[] reverse = calculateReversePayoffs(payoffMatrix);
@@ -73,7 +78,7 @@ public class GameMaster {
 		playerArrayPrinter("Overall Average Expected Utility", players, expPayoff);
 		playerArrayPrinter("Tournament Regret",players,regrets);
 		playerArrayPrinter("Tournament Stabilities",players,stabilities);
-		playerArrayPrinter("Expected Reverse Utility",players,reverse);
+		playerArrayPrinter("Expected Reverse Utility",players,reverse);*/
 		System.exit(0);//just to make sure it exits
 	}
 
@@ -107,12 +112,13 @@ public class GameMaster {
 			GameModel mg = new GameModel(gameNumber);//gives the agent a copy of the game
 			for(int playerIndex = 0; playerIndex < p.size(); playerIndex++){
 				Player player = p.get(playerIndex);
-				for(int playerNumber = 1; playerNumber <= 2; playerNumber++){
-					player.setGame(gameNumber);
-					player.setGame(mg);
-					player.setPlayerNumber(playerNumber);
-					tryPlayer(new PlayerDriver(PlayerState.SOLVE,player));
-				}
+				//for(int playerNumber = 1; playerNumber <= 2; playerNumber++){
+				player.setGame(gameNumber);
+				player.setGame(mg);
+				//player.setPlayerNumber(playerNumber);
+				player.setDefender();
+				tryPlayer(new PlayerDriver(PlayerState.SOLVE,player));
+				//}
 			}				
 		}
 	}
@@ -126,35 +132,17 @@ public class GameMaster {
 	 * @param gameNumber game
 	 * @return
 	 */
-	public static double[] match(Player p1, Player p2, int gameNumber){
-		double[][] strats = new double[2][];
-		int player = 1;
-		strats[0] = p1.getStrategy(gameNumber, player);
-		player = 2;
-		strats[1] = p2.getStrategy(gameNumber, player);
-		List<double[]> list = new ArrayList<double[]>();
-		list.add(strats[0]);
-		list.add(strats[1]);
-		/*OutcomeDistribution distro = new OutcomeDistribution(list);
-		if(strats[0].isValid() && strats[1].isValid())
-			//return SolverUtils.computeOutcomePayoffs(games.get(gameNumber),distro);
-			return strats[0];//fix this
-		else if(!strats[0].isValid() && !strats[1].isValid()){
-			System.out.println("Invalid strategy for Players: "+p1.getName()+" and "+p2.getName()+" on game number "+gameNumber);
-			double[] payoffs = {-1337,-1337};
-			return payoffs;
-		}
-		else if(!strats[0].isValid()){
-			System.out.println("Invalid strategy for Player: "+p1.getName()+" on game number "+gameNumber);
-			double[] payoffs = {-1337,0};
-			return payoffs;
-		}
-		else{//strats[1] must be invalid
-			System.out.println("Invalid strategy for Player: "+p2.getName()+" on game number "+gameNumber);
-			double[] payoffs = {0,-1337};
-			return payoffs;
-		}*/
-		return strats[0];
+	public static double[] match(Player d, Player a, int gameNumber){
+		double[] coverage = d.getStrategy(gameNumber);
+		a.setAttacker();
+		a.setGame(gameNumber);
+		a.setC(coverage);
+		tryPlayer(new PlayerDriver(PlayerState.SOLVE,a));
+		int t = a.getT();
+		GameModel g = new GameModel(gameNumber);
+		double[] payoffs = g.computePayoffs(coverage,t);
+
+		return payoffs;
 	}
 	/**
 	 * Computes and stores the results of a match given the expected payoffs

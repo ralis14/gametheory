@@ -1,6 +1,7 @@
 package SG;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Player agent.
@@ -17,19 +18,21 @@ public abstract class Player
     protected GameModel game;
     private int gameNumber;
     protected int playerNumber;
-    private ArrayList<StrategyHolder> strategies;//interal saved for later use by GameMaster
-    
+    private ArrayList<double[]> strategies;//interal saved for later use by GameMaster
+    private int T;
+    private double[] C;
     /**
      * Default Constructor
      */
     public Player()
     {
-        strategies = new ArrayList<StrategyHolder>();
+        //strategies = new ArrayList<StrategyHolder>();
+        strategies = new ArrayList<double[]>();
     }
 
     /**
      * Set game
-     * @param the game in matrix form
+     * @param the game
      */
     public void setGame(GameModel game){
     	this.game = game;
@@ -72,9 +75,9 @@ public abstract class Player
      * Player logic goes here in extended super agent. Do not try to edit this agent
      * 
      */
-    protected double[] solveGame(GameModel mg, int playerNum){
+    protected double[] solveGame(GameModel mg){
     	this.setGame(mg);
-    	this.setPlayerNumber(playerNum);
+    	//this.setPlayerNumber(playerNum);
     	return this.solveGame();
     
     }
@@ -83,7 +86,7 @@ public abstract class Player
      * @return the mixed strategy developed by the player
      */
     protected double[] solveGame(){
-    	return this.solveGame(this.game, this.playerNumber-1);
+    	return this.solveGame(this.game);
     }
     /**
      * Game Master stores a copy of the player strategies inside the player.
@@ -92,19 +95,73 @@ public abstract class Player
      * @param playerNum Row Player = 1, Column Player = 2
      */
     public void addStrategy(int index, double[] ms, int playerNum){
-    	if(strategies.size() == index)
+    	/*if(strategies.size() == index)
     		strategies.add(new StrategyHolder());
     	strategies.get(index).addStrategy(ms, playerNum);
+    	*/
+    	strategies.add(ms);
     }
     /**
      * Standard accessor
      * @param index Game Number
-     * @param playerNum Row Player = 1, Column Player = 2
-     * @return
+     * @return the coverage
      */
-    public double[] getStrategy(int index, int playerNum){
+    public double[] getStrategy(int index){
     	if(index > strategies.size())
     		return null;
-    	return strategies.get(index).getStrategy(playerNum);
+    	return strategies.get(index);
     }
+    /**
+     * wrapper for attackTarget
+     * @return the target to attack
+     */
+    protected int attackTarget(){
+		return this.attackTarget(game,C);
+	}
+	/**
+     * wrapper for attackTarget
+     * @param g game model
+     * @param c coverage
+     * @return the target to attack
+     */
+    protected int attackTarget(GameModel g, double[] c){
+		this.setGame(g);
+		this.setC(c);
+		return this.attackTarget();
+	}
+	/**
+	 * set as defender
+	 */
+	public void setDefender(){
+		playerNumber = 1;
+	}
+	
+	/**
+	 * set as attacker
+	 */
+	public void setAttacker(){
+		playerNumber = 2;
+	}
+	
+	/**
+	 * set recent target
+	 * @param newT
+	 */
+	public void setT(int newT){
+		T = newT;
+	}
+    /**
+     * get the recent target
+     * @return the recent target
+     */
+    public int getT(){
+		return T;
+	}
+	/**
+	 * set the coverage
+	 * @param coverage
+	 */
+	public void setC(double[] coverage){
+		C = Arrays.copyOf(coverage,coverage.length);
+	}
 }
