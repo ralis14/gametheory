@@ -1,6 +1,6 @@
 package SG;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Calculates stats and performance of agemts
@@ -224,13 +224,51 @@ public class Analyzer
                 min = a[i];
         return  min;
     }
+    
+    /**
+     * Find the index (assume that the names match) with the mimum  value.
+     * Used for the special case when the analyzing a security game
+     * and trying to find which attacker agent minimized the payoffs of the defender agent
+     */
+    public void printMinimizer(){
+		int[] minimizer = new int[points.length];
+		for(int i = 0; i < minimizer.length; i++){
+			int[] indexes = minIndexes(points[i]);
+			for(int m = 0; m < indexes.length; m++)
+				minimizer[indexes[m]]++;
+		}
+		double[] dmin = new double[minimizer.length];
+		for(int i = 0; i < dmin.length; i++)
+			dmin[i] = minimizer[i];
+		String[] copy = Arrays.copyOf(names,names.length);
+		sort(dmin, copy);
+		for(int i = 0; i < minimizer.length; i++)
+			System.out.println(copy[i]+"\t"+dmin[i]);
+	}
+	/**
+	 * auxiliary method that finds all of the indexes with the minimum value
+	 * @param a an array
+	 * @return an array of all the indexes with the minimum value of a
+	 */
+	private int[] minIndexes(double[] a){
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		int index = 0;
+		indexes.add(new Integer(0));
+		for(int i = 1; i < a.length; i++){
+			if(a[i] < a[index]){
+				indexes.clear();
+				indexes.add(new Integer(i));
+				index = i;
+			}
+			else if(a[i]==a[index]){
+				indexes.add(new Integer(i));
+			}
+		}
+		Integer[] temp = indexes.toArray(new Integer[indexes.size()]);
+		int[] primative = new int[temp.length];
+		for(int i = 0; i < temp.length; i++)
+			primative[i] = temp[i].intValue();
+		return primative;
+	}
 
-    /*public static void main(String[] args){
-        String[] aS = {"Larry","Curly","Moe"};
-        String[] dS = {"Bonnie","Clyde",};
-        int[][] results = new int[2][3];
-        results[0][0] = 9;results[0][1]=7;results[0][2]=6;
-        results[1][0] = 2;results[1][1]=3;results[1][2]=6;
-        new Analyzer(results,aS,dS);
-    }*/
 }

@@ -13,7 +13,7 @@ import java.util.*;
 public class GameMaster {
 
 	private static boolean verbose = false; //Set to false if you do not want the details
-	private static int numGames = 3; //test with however many games you want
+	private static int numGames = 10; //test with however many games you want
 	private static boolean zeroSum = false; //when true use zero sum games, when false use general sum
 	private static ArrayList<GameModel> games = new ArrayList<GameModel>();
 	
@@ -67,6 +67,7 @@ public class GameMaster {
         defenderResults.printAverages();
         defenderResults.printMedians();
         defenderResults.printRegret();
+        defenderResults.printMinimizer();
         System.out.println();
         System.out.println("Attacker Results");
         Analyzer attackerResults = new Analyzer(attackerUtilities, names);
