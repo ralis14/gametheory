@@ -68,8 +68,8 @@ public class GameMaster {
 		String[] names = new String[numPlayers];
 		for(int i = 0; i < numPlayers; i++)
 			names[i] = players.get(i).getName();
-		new Analyzer(defenderUtilities, names, names);
-		new Analyzer(attackerUtilities, names, names);
+		new Analyzer(defenderUtilities, names);
+		new Analyzer(attackerUtilities, names);
 		//average the payoff matrix
 		/*for(int i = 0; i < payoffMatrix.length; i++)
 			for(int j= 0; j < payoffMatrix[i].length; j++)

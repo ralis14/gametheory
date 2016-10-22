@@ -10,108 +10,62 @@ import java.util.Arrays;
 public class Analyzer
 {
     double[][] points;
-    String[] defenderNames;
-    String[] attackerNames;
-    int numAttackers;
-    int numDefenders;
-    double[] aTotals;
-    double[] dTotals;
-    double[] aAverage;
-    double[] dAverage;
-    double[] aMedian;
-    double[] dMedian;
-    double[] aStd;
-    double[] dStd;
-    double[] aRegret;
-    double[] dRegret;
-    double[] aBestOf;
-    double[] dBestOf;
+    String[] names;
+    int numAgents;
+    double[] totals;
+    double[] mean;
+    double[] median;
+    double[] std;
+    double[] regret;
+    double[] bestOf;
 
     /**
      * Calculates important values for comparing attackers and defenders
-     * @param results point value 2dArray with row as defenders and columns as attackers
-     * @param aNames the names of the attackers as they are in the results
-     * @param dNames the names of the defenders as they are in the results
+     * @param results point value 2dArray with row as agents and columns as opponents
+     * @param Names the names of the defenders as they are in the results
      */
-    public Analyzer(double[][] results, String[] aNames, String[] dNames)
+    public Analyzer(double[][] results, String[] Names)
     {
         points = results;
-        defenderNames = dNames;
-        attackerNames = aNames;
-        numDefenders = dNames.length;
-        numAttackers = aNames.length;
+        names = Names;
+        numAgents = names.length;
 
-        aTotals = new double[numAttackers];
-        dTotals = new double[numDefenders];
+        totals = new double[numAgents];
         //calculate totals
-        for(int d = 0; d < points.length; d++)
-            for(int a = 0; a < points[d].length; a++)
-            {
-                dTotals[d] += points[d][a];
-                aTotals[a] += points[d][a];
-            }
+        for(int i = 0; i < points.length; i++)
+            for(int j = 0; j < points[i].length; j++)
+                totals[i] += points[i][j];
 
         //calculate averages
         //assumes arrays may not be the same length
-        aAverage = new double[aTotals.length];
-        dAverage = new double[dTotals.length];
-        for(int a = 0; a < numAttackers; a++)
-            aAverage[a] = (double)aTotals[a] / numDefenders;
-        for(int d = 0; d < dAverage.length; d++)
-            dAverage[d] = (double)dTotals[d] / numAttackers;
-
+        mean = new double[totals.length];
+        for(int a = 0; a < numAgents; a++)
+            mean[a] = (double)totals[a] / numAgents;
+        
         //calculate medians
-        aMedian = new double[numAttackers];
-        dMedian = new double[numDefenders];
-        for(int i = 0; i < dMedian.length; i++)
-            dMedian[i] = median(points[i]);
-        for(int j = 0; j < aMedian.length;j++)
-        {
-            double[] a  = new double[points.length];
-            for(int i = 0; i < a.length; i++)
-                a[i] = points[i][j];
-            aMedian[j] = median(a);
-        }
+        median = new double[numAgents];
+        for(int i = 0; i < median.length; i++)
+            median[i] = median(points[i]);
 
         //calculate standard deviations
-        aStd = new double[numAttackers];
-        dStd = new double[numDefenders];
-        for(int d = 0; d < numDefenders; d++)
-            dStd[d] = std(points[d],dAverage[d]);
-        for(int a = 0; a < numAttackers; a++)
-        {
-            double[] x = new double[numDefenders];
-            for(int d = 0; d < numDefenders; d++)
-                x[d] = points[d][a];
-            aStd[a] = std(x,aAverage[a]);
-        }
+        std = new double[numAgents];
+        for(int d = 0; d < numAgents; d++)
+            std[d] = std(points[d],mean[d]);      
 
         //calculate regrets and best of
-        aRegret = new double[numAttackers];
-        aBestOf = new double[numAttackers];
-        dRegret = new double[numDefenders];
-        dBestOf = new double[numDefenders];
-        //for attacker
-        for (double[] point : points) {
-            double max = maximum(point);
-            for (int a = 0; a < point.length; a++) {
-                aRegret[a] += (max - point[a]) / (double) numDefenders;
-                if (point[a] == max)
-                    aBestOf[a]++;
-            }
-        }
-        //for defender
-        for(int a = 0; a < numAttackers; a++)
+        regret = new double[numAgents];
+        bestOf = new double[numAgents];
+        for(int a = 0; a < numAgents; a++)
         {
-            double[] p = new double[numDefenders];
-            for(int i = 0; i < numDefenders; i++)
+            double[] p = new double[numAgents];
+            for(int i = 0; i < numAgents; i++)
                 p[i] = points[i][a];
             double min = minimum(p);
-            for(int d = 0; d < numDefenders; d++)
+            for(int d = 0; d < numAgents; d++)
             {
-                dRegret[d] += (p[d] - min) / (double) numAttackers;
+                regret[d] += (p[d] - min) / (double) numAgents;
                 if(p[d] == min)
-                    dBestOf[d]++;
+                    bestOf[d]++;
             }
         }
         //print out results
@@ -142,17 +96,14 @@ public class Analyzer
      */
     public void printResults()
     {
-        System.out.print("\t");
-        for (String attackerName : attackerNames)
-            System.out.print(attackerName + "\t");
-        System.out.println();
-        for(int i = 0; i < points.length; i++)
-        {
-            System.out.print(defenderNames[i]+"\t");
+		System.out.println();
+        for(int i = 0; i < names.length; i++){
+            System.out.print(names[i]);
             for(int j = 0; j < points[i].length; j++)
-                System.out.print(points[i][j]+"\t\t");
-            System.out.println();
-        }
+				System.out.print("\t"+points[i][j]);
+			System.out.println();
+		}
+        System.out.println();
     }
 
     /**
@@ -161,8 +112,7 @@ public class Analyzer
     public void printAverages()
     {
         System.out.println("Average Points");
-        print(aAverage,attackerNames);
-        print(dAverage,defenderNames);
+        print(mean,names);
     }
 
     /**
@@ -171,8 +121,7 @@ public class Analyzer
     public void printMedians()
     {
         System.out.println("Medians");
-        print(aMedian, attackerNames);
-        print(dMedian,defenderNames);
+        print(median, names);
     }
 
     /**
@@ -181,8 +130,7 @@ public class Analyzer
     public void printStandardDev()
     {
         System.out.println("Standard Deviations");
-        print(aStd,attackerNames);
-        print(dStd,defenderNames);
+        print(std,names);
     }
 
     /**
@@ -191,8 +139,7 @@ public class Analyzer
     public void printRegret()
     {
         System.out.println("Average Regret");
-        print(aRegret,attackerNames);
-        print(dRegret,defenderNames);
+        print(regret,names);
     }
 
     /**
@@ -201,8 +148,7 @@ public class Analyzer
     public void printBestOf()
     {
         System.out.println("Instances Where Agent Was The Best");
-        print(aBestOf,attackerNames);
-        print(dBestOf,defenderNames);
+        print(bestOf,names);
     }
 
     /**
