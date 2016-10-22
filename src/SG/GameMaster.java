@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class GameMaster {
 
-	private static boolean verbose = true; //Set to false if you do not want the details
-	private static int numGames = 2; //test with however many games you want
+	private static boolean verbose = false; //Set to false if you do not want the details
+	private static int numGames = 3; //test with however many games you want
 	private static boolean zeroSum = false; //when true use zero sum games, when false use general sum
 	private static ArrayList<GameModel> games = new ArrayList<GameModel>();
 	
@@ -46,47 +46,34 @@ public class GameMaster {
 				for (int game = 0; game < numGames; game++) {
 					Player player1 = players.get(d);
 					Player player2 = players.get(a);
-					if(verbose)	System.out.println("Game number" + game);
+					if(verbose)	System.out.println("Game" + game);
 					if(verbose) System.out.println(player1.getName()+" vs "+player2.getName());
 					double[] payoffs = match(player1,player2,game);
 					defenderPayoffs[d] += payoffs[0];
 					attackerPayoffs[a] += payoffs[1];
-					//updateResults(payoffMatrix,payoffs,p1,p2,wins);
 					defenderUtilities[d][a] += payoffs[0];
 					attackerUtilities[d][a] += payoffs[1];
 					if(verbose) System.out.println(payoffs[0]);
 					if(verbose) System.out.println(payoffs[1]);
-					/*if(verbose) System.out.println(player2.getName()+" vs "+player1.getName());
-					payoffs = match(player2,player1,game);
-					updateResults(payoffMatrix,payoffs,p2,p1,wins);
-					if(verbose) System.out.println(payoffs[0]);
-					if(verbose) System.out.println(payoffs[1]);
-					if(verbose) System.out.println();*/
 				}
 			}
 		}
 		String[] names = new String[numPlayers];
 		for(int i = 0; i < numPlayers; i++)
 			names[i] = players.get(i).getName();
-		new Analyzer(defenderUtilities, names);
-		new Analyzer(attackerUtilities, names);
-		//average the payoff matrix
-		/*for(int i = 0; i < payoffMatrix.length; i++)
-			for(int j= 0; j < payoffMatrix[i].length; j++)
-				payoffMatrix[i][j] = payoffMatrix[i][j]/(2*numGames*payoffMatrix.length);	
-		if(verbose) printMatrix(payoffMatrix,players);*/
-		
-		//compute results
-		/*double[] expPayoff = calculateAverageExpectedPayoffs(payoffMatrix);
-		double[] regrets = calculateRegrets(payoffMatrix);
-		double[] stabilities = calculateStabilities(payoffMatrix);
-		double[] reverse = calculateReversePayoffs(payoffMatrix);
-		//print summary regardless of verbose
-		playerArrayPrinter("Total Wins",players, wins);
-		playerArrayPrinter("Overall Average Expected Utility", players, expPayoff);
-		playerArrayPrinter("Tournament Regret",players,regrets);
-		playerArrayPrinter("Tournament Stabilities",players,stabilities);
-		playerArrayPrinter("Expected Reverse Utility",players,reverse);*/
+		System.out.println("Defender Results");
+		Analyzer defenderResults = new Analyzer(defenderUtilities, names);
+		defenderResults.printResults();
+        defenderResults.printAverages();
+        defenderResults.printMedians();
+        defenderResults.printRegret();
+        System.out.println();
+        System.out.println("Attacker Results");
+        Analyzer attackerResults = new Analyzer(attackerUtilities, names);
+        attackerResults.printResults();
+        attackerResults.printAverages();
+        attackerResults.printMedians();
+        attackerResults.printRegret();
 		System.exit(0);//just to make sure it exits
 	}
 
@@ -152,27 +139,6 @@ public class GameMaster {
 
 		return payoffs;
 	}
-	/**
-	 * Computes and stores the results of a match given the expected payoffs
-	 * @param matrix Payoff Matrix
-	 * @param payoffs results of a match
-	 * @param p1 Player 1
-	 * @param p2 Player 2
-	 * @param wins data structure that stores wins
-	 */
-	public static void updateResults(double[][] matrix, double[] payoffs, int p1, int p2, double[]wins){
-		matrix[p1][p2] = matrix[p1][p2] + payoffs[0];
-		matrix[p2][p1] = matrix[p2][p1] + payoffs[1];
-		if(payoffs[0]==payoffs[1]){//tie
-			wins[p1]+=0.5;
-			wins[p2]+=0.5;
-		}
-		else if(payoffs[0] > payoffs[1])
-			wins[p1]++;
-		else
-			wins[p2]++;
-			
-	}
 	
 	/**
 	 * Want to visualize the results of a tournament? Call this function.
@@ -190,90 +156,5 @@ public class GameMaster {
 			}
 			System.out.println();
 		}
-	}
-	/**
-	 * Calculate average expected payoffs for each player
-	 * @return average expected payoffs
-	 */
-	public static double[] calculateAverageExpectedPayoffs(double[][] matrix){
-		double[] expPayoff = new double[matrix.length];
-		for(int i = 0; i < matrix.length; i++){
-			for(int j = 0; j < matrix[i].length; j++){
-				expPayoff[i] = expPayoff[i] + matrix[i][j];
-			}
-			expPayoff[i] = expPayoff[i] / matrix[i].length;
-		}
-		return expPayoff;
-	}
-	/**
-	 * Calculates the regrets for every agent and stores them in the array.
-	 * @return array of regrets in the tournament
-	 */
-	public static double[] calculateRegrets(double[][] matrix) {
-		double[] regret = new double[matrix.length];
-		for (int i = 0; i< matrix.length; i++){
-			double max = maximum(matrix[i]);
-			for (int j = 0; j < matrix[i].length; j++) {
-				regret[i] += (max - matrix[i][j]) / regret.length;
-			}
-		}
-		return regret;
-	}
-	
-	/**
-	 * Calculates the average payoffs scored against each agent (the reverse payoff)
-	 * @return array of reverse payoffs
-	 */
-	public static double[] calculateReversePayoffs(double[][] matrix){
-		double[] reverse = new double[matrix.length];
-		for(int i = 0; i < reverse.length; i++){
-			for(int j = 0; j < matrix.length; j++){
-				reverse[i] = reverse[i] + matrix[j][i];
-			}
-			reverse[i] = reverse[i] / reverse.length;
-		}
-		return reverse;
-	}
-	
-	/**
-	 * Calculates the stabilities for every agents and stores them in the array.
-	 * (Taken from  GameUtils class in ega.games package.)
-	 */
-	public static double[] calculateStabilities(double[][] matrix){
-		double[] stabilities = new double[matrix.length];
-		Arrays.fill(stabilities, Double.NEGATIVE_INFINITY);
-		for (int strat = 0; strat < matrix.length; strat++) {
-			double base = matrix[strat][strat];
-			for (int row = 0; row < matrix.length; row++) {
-				if (row == strat)
-					continue;
-				double btd = matrix[row][strat] - base;
-				stabilities[strat] = Math.max(stabilities[strat], btd);
-			}
-		}
-		return stabilities;
-	}
-
-	/**
-	 * Returns the maximum number in the given array of doubles.
-	 * 
-	 * @param a the array of doubles.
-	 * @return the maximum number in the array.
-	 */
-	public static double maximum(double[] a) {
-		double max = a[0];
-		for (int i = 1; i < a.length; i++)
-			if (max < a[i])
-				max = a[i];
-		return max;
-	}
-	
-	/**
-	 * Player Array printer
-	 */
-	public static void playerArrayPrinter(String text, ArrayList<Player> players, double[] array){
-		System.out.println("\n"+text);
-		for(int i = 0; i < array.length; i++)
-			System.out.println(players.get(i).getName()+"\t"+array[i]);
 	}
 }
