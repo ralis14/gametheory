@@ -37,20 +37,23 @@ public class GameMaster {
 		//double[][] payoffMatrix = new double[players.size()][players.size()];
 		double[] attackerPayoffs = new double[players.size()];
 		double[] defenderPayoffs = new double[players.size()];
+		double[][] defenderUtilities = new double[players.size()][players.size()];
+		double[][] attackerUtilities = new double[players.size()][players.size()];
 		//double[] wins = new double[players.size()];
 		int numPlayers = players.size();
-		for(int p1 = 0; p1 < numPlayers; p1++) {
-			for(int p2 = p1; p2 < numPlayers; p2++) {
+		for(int d = 0; d < numPlayers; d++) {
+			for(int a = 0; a < numPlayers; a++) {
 				for (int game = 0; game < numGames; game++) {
-					Player player1 = players.get(p1);
-					Player player2 = players.get(p2);
+					Player player1 = players.get(d);
+					Player player2 = players.get(a);
 					if(verbose)	System.out.println("Game number" + game);
 					if(verbose) System.out.println(player1.getName()+" vs "+player2.getName());
 					double[] payoffs = match(player1,player2,game);
-					defenderPayoffs[p1] += payoffs[0];
-					attackerPayoffs[p1] += payoffs[1];
+					defenderPayoffs[d] += payoffs[0];
+					attackerPayoffs[a] += payoffs[1];
 					//updateResults(payoffMatrix,payoffs,p1,p2,wins);
-					
+					defenderUtilities[d][a] += payoffs[0];
+					attackerUtilities[d][a] += payoffs[1];
 					if(verbose) System.out.println(payoffs[0]);
 					if(verbose) System.out.println(payoffs[1]);
 					/*if(verbose) System.out.println(player2.getName()+" vs "+player1.getName());
@@ -62,6 +65,11 @@ public class GameMaster {
 				}
 			}
 		}
+		String[] names = new String[numPlayers];
+		for(int i = 0; i < numPlayers; i++)
+			names[i] = players.get(i).getName();
+		new Analyzer(defenderUtilities, names, names);
+		new Analyzer(attackerUtilities, names, names);
 		//average the payoff matrix
 		/*for(int i = 0; i < payoffMatrix.length; i++)
 			for(int j= 0; j < payoffMatrix[i].length; j++)
