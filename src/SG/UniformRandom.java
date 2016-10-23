@@ -30,8 +30,9 @@ public class UniformRandom extends Player{
     
     /**
      * Attacker logic
-     * @param mg the game
+     * @param g the game
      * @param coverage defender's coverage
+     * @return the target to attack by index (0, 1, 2, ...)
      */
     protected int attackTarget(GameModel g, double[] coverage){
 		Random r = new Random();

@@ -16,22 +16,23 @@ public class SolidRock extends Player{
 	
 	/**
      * THIS METHOD SHOULD BE OVERRIDDEN 
-     * GameMaster will call this to compute your strategy.
-     * @param mg The game your agent will be playing
+     * GameMaster will call this to compute your coverage strategy.
+     * @param g The game your agent will be playing
      * @return the coverage
      */
-    protected double[] solveGame(GameModel mg){
-    	double[] coverage = new double[mg.getT()];
+    protected double[] solveGame(GameModel g){
+    	double[] coverage = new double[g.getT()];
     	coverage[0] = 1;//fully protect target 0
     	return coverage;
     }
     
     /**
      * Attacker logic
-     * @param mg the game
+     * @param g the game
      * @param coverage defender's coverage
+     * @return the target to attack
      */
-    protected int attackTarget(GameModel mg, double[] coverage){
+    protected int attackTarget(GameModel g, double[] coverage){
 		return 0;//always attack target 0
 	}
 }

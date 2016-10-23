@@ -1,6 +1,5 @@
 package SG;
 
-//import java.util.ArrayList;
 import java.util.*;
 
 /**
@@ -26,13 +25,12 @@ public abstract class Player
      */
     public Player()
     {
-        //strategies = new ArrayList<StrategyHolder>();
         strategies = new ArrayList<double[]>();
     }
 
     /**
      * Set game
-     * @param the game
+     * @param game the game
      */
     public void setGame(GameModel game){
     	this.game = game;
@@ -53,13 +51,14 @@ public abstract class Player
     }
     /**
      * Set player number
+     * @param playerNumber 1 is defender otherwise attacker
      */
     public void setPlayerNumber(int playerNumber){
     	this.playerNumber = playerNumber;
     }
     /**
      * Standard accessor get current player number
-     * @return
+     * @return the player number
      */
     public int getPlayerNumber(){
     	return playerNumber;
@@ -69,15 +68,17 @@ public abstract class Player
      * Get Agent Name used by GameMaster.
      * @return Name of player
      */
-    public String getName(){return playerName;}
+    public String getName(){
+		return playerName;
+	}
 
     /**
      * Player logic goes here in extended super agent. Do not try to edit this agent
-     * 
+     * @param g the game
+     * @return the defender coverage
      */
-    protected double[] solveGame(GameModel mg){
-    	this.setGame(mg);
-    	//this.setPlayerNumber(playerNum);
+    protected double[] solveGame(GameModel g){
+    	this.setGame(g);
     	return this.solveGame();
     
     }
@@ -91,15 +92,11 @@ public abstract class Player
     /**
      * Game Master stores a copy of the player strategies inside the player.
      * @param index Game number
-     * @param ms Agent's strategy in the game when playing as playerNum
-     * @param playerNum Row Player = 1, Column Player = 2
+     * @param coverage Agent's strategy in the game when playing as playerNum
+     * @param playerNum defender = 1, anything else is not used anymore
      */
-    public void addStrategy(int index, double[] ms, int playerNum){
-    	/*if(strategies.size() == index)
-    		strategies.add(new StrategyHolder());
-    	strategies.get(index).addStrategy(ms, playerNum);
-    	*/
-    	strategies.add(ms);
+    public void addStrategy(int index, double[] coverage, int playerNum){
+    	strategies.add(coverage);
     }
     /**
      * Standard accessor
@@ -113,7 +110,7 @@ public abstract class Player
     }
     /**
      * wrapper for attackTarget
-     * @return the target to attack
+     * @return the target to attack target 0, target 1, ...
      */
     protected int attackTarget(){
 		return this.attackTarget(game,C);
@@ -144,22 +141,22 @@ public abstract class Player
 	}
 	
 	/**
-	 * set recent target
-	 * @param newT
+	 * set number of targets
+	 * @param newT the number of targets
 	 */
 	public void setT(int newT){
 		T = newT;
 	}
     /**
-     * get the recent target
-     * @return the recent target
+     * get the number of targets
+     * @return the number of targets
      */
     public int getT(){
 		return T;
 	}
 	/**
 	 * set the coverage
-	 * @param coverage
+	 * @param coverage array assigning resources to each target index. Sum(coverage) &lt;= m all individual coverages are between zero and one. If you are unsure if your coverage is valid call the isValidCoverage() in GameModel
 	 */
 	public void setC(double[] coverage){
 		C = Arrays.copyOf(coverage,coverage.length);

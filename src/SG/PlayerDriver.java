@@ -13,7 +13,7 @@ public class PlayerDriver implements Runnable {
 	private Player player;
 
 	/**
-	 * Constructor used for Player's initialize() and makeAction() methods
+	 * Constructor
 	 * @param state a PlayerState
 	 * @param player a Player
 	 */
@@ -28,14 +28,13 @@ public class PlayerDriver implements Runnable {
 	 */
 	public void run() {
 		try{
-			if(player.getPlayerNumber() == 1){
+			if(player.getPlayerNumber() == 1){//defender
 				double[] ms = player.solveGame();
 				player.addStrategy(player.getGameNumber(), ms, player.getPlayerNumber());
 				state = PlayerState.COMPLETE;
 			}
-			else{
+			else{//attacker
 				int t = player.attackTarget();
-				//player.addStrategy(player.getGameNumber(), ms, player.getPlayerNumber());
 				player.setT(t);
 				state = PlayerState.COMPLETE;
 			}

@@ -2,6 +2,7 @@ package SG;
 import java.util.*;
 /**
  * Auxiliary class for NFG. Keeps the Strategies nice and organized.
+ * Updated to work for Security Games
  * @author Oscar
  *
  */
@@ -29,9 +30,8 @@ public class StrategyHolder {
 	
 	/**
 	 * Get the stored strategy for a player
-	 * @param ms A strategy
 	 * @param playerNum Row Player = 1, Column Player = 2
-	 * @return
+	 * @return coverage vector
 	 */
 	public double[] getStrategy(int playerNum){
 		if(playerNum == 1)

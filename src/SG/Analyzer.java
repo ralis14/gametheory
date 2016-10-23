@@ -270,5 +270,4 @@ public class Analyzer
 			primative[i] = temp[i].intValue();
 		return primative;
 	}
-
 }

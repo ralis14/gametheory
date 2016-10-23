@@ -2,8 +2,13 @@ package SG;
 import java.util.*;
 import java.io.*;
 /****
- * Creates games, formats the game in suitable format for minizinc,
- * parse the output from minizinc and update the game.
+ * Creates security games
+ * T is the number of targets
+ * m is the number of resources sum(c) &lt;= m
+ * UAU Attacker Uncovered Utility
+ * UAC Attacker Covered Utility
+ * UDU Defender Uncovered Utility
+ * UDC Defender Covered Utility
  * 
  * @author Oscar Veliz
  */
@@ -31,7 +36,6 @@ public class GameModel{
 	 * @param seed Random number seed so you can create the same game twice
 	 * @param maxU The overall maximum utility of the game.
 	 * @param Targets the number of targets
-	 * @param ampl true if using ampl
 	 */
 	public GameModel(int seed, int maxU, int Targets){
 		Random r = new Random(seed);
@@ -51,6 +55,7 @@ public class GameModel{
 	/**
 	 * Same as the other constructor but has default values of 10 and 10
 	 * for maxU and Targets
+	 * @param seed the random generation seed
 	 */
 	public GameModel(int seed){
 		this(seed,10,10);
@@ -65,7 +70,7 @@ public class GameModel{
 	}
 	/**
 	 * set the number of resources
-	 * @param M new resources
+	 * @param newM new resources
 	 */
 	 public void setM(int newM){
 		 m = newM;
@@ -79,7 +84,7 @@ public class GameModel{
 	}
 	/**
 	 * set the number of targets
-	 * @param newT
+	 * @param newT new number of targets
 	 */
 	 public void setT(int newT){
 		 T = newT;
@@ -88,6 +93,7 @@ public class GameModel{
 	 * compute the payoffs given a coverage and a target
 	 * @param c coverage
 	 * @param t target
+	 * @return {defenderPayoff, attackerPayoff}
 	 */
 	public double[] computePayoffs(double[] c, int t){
 		double[] payoffs = new double[2];//defender payoff is zero attacker is one

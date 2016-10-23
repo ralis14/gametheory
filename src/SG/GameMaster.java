@@ -2,7 +2,6 @@ package SG;
 
 import java.util.*;
 
-
 /**
  * Security Game Tournament Simulator based of Normal Form Tournament Simulator
  * created by Marcus and Oscar for Fall 2015 of Risk Analysis
@@ -120,13 +119,14 @@ public class GameMaster {
 	}
 	
 	/**
-	 * A single individual match between to players, the first player is row the second is column
+	 * A single individual match between a defender and an attacker.
+	 * Returns the payoffs
 	 * 
 	 * If a strategy for a player is invalid it will assign a payoff of -1337 to that player
-	 * @param p1 row player
-	 * @param p2 column player
+	 * @param d defender
+	 * @param a attacker
 	 * @param gameNumber game
-	 * @return
+	 * @return the payoffs in an array of size 2 payoff[0] is the defender utility and payoff[1] is the attacker utility
 	 */
 	public static double[] match(Player d, Player a, int gameNumber){
 		double[] coverage = d.getStrategy(gameNumber);
