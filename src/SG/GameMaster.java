@@ -1,10 +1,11 @@
 package SG;
-
 import java.util.*;
 
 /**
  * Security Game Tournament Simulator based of Normal Form Tournament Simulator
- * created by Marcus and Oscar for Fall 2015 of Risk Analysis
+ * originally created by Marcus and Oscar for Fall 2015 of Risk Analysis
+ * 
+ * Note to students: Add your agents in the //add your agent(s) here section
  * 
  * @author Oscar Veliz
  * @version 2016.10.20
@@ -13,7 +14,6 @@ public class GameMaster {
 
 	private static boolean verbose = false; //Set to false if you do not want the details
 	private static int numGames = 10; //test with however many games you want
-	private static boolean zeroSum = false; //when true use zero sum games, when false use general sum
 	private static ArrayList<GameModel> games = new ArrayList<GameModel>();
 	
 	/**
@@ -33,12 +33,10 @@ public class GameMaster {
 		computeStrategies(players);
 		
 		//compute expected payoffs
-		//double[][] payoffMatrix = new double[players.size()][players.size()];
 		double[] attackerPayoffs = new double[players.size()];
 		double[] defenderPayoffs = new double[players.size()];
 		double[][] defenderUtilities = new double[players.size()][players.size()];
 		double[][] attackerUtilities = new double[players.size()][players.size()];
-		//double[] wins = new double[players.size()];
 		int numPlayers = players.size();
 		for(int d = 0; d < numPlayers; d++) {
 			for(int a = 0; a < numPlayers; a++) {
@@ -135,7 +133,6 @@ public class GameMaster {
 		int t = a.getT();
 		GameModel g = new GameModel(gameNumber);
 		double[] payoffs = g.computePayoffs(coverage,t);
-
 		return payoffs;
 	}
 	

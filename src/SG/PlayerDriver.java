@@ -37,11 +37,9 @@ public class PlayerDriver implements Runnable {
 				int t = player.attackTarget();
 				player.setT(t);
 				state = PlayerState.COMPLETE;
-			}
-			
+			}			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-
 }

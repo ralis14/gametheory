@@ -1,9 +1,8 @@
 package SG;
-
 import java.util.*;
 
 /**
- * Calculates stats and performance of agemts
+ * Calculates stats and performance of agents based off of normal form analyzer
  * @author Oscar Veliz
  * @version 2016/10/22
  */
@@ -24,12 +23,10 @@ public class Analyzer
      * @param results point value 2dArray with row as agents and columns as opponents
      * @param Names the names of the defenders as they are in the results
      */
-    public Analyzer(double[][] results, String[] Names)
-    {
+    public Analyzer(double[][] results, String[] Names){
         points = results;
         names = Names;
         numAgents = names.length;
-
         totals = new double[numAgents];
         //calculate totals
         for(int i = 0; i < points.length; i++)
@@ -55,14 +52,12 @@ public class Analyzer
         //calculate regrets and best of
         regret = new double[numAgents];
         bestOf = new double[numAgents];
-        for(int a = 0; a < numAgents; a++)
-        {
+        for(int a = 0; a < numAgents; a++){
             double[] p = new double[numAgents];
             for(int i = 0; i < numAgents; i++)
                 p[i] = points[i][a];
             double min = minimum(p);
-            for(int d = 0; d < numAgents; d++)
-            {
+            for(int d = 0; d < numAgents; d++){
                 regret[d] += (p[d] - min) / (double) numAgents;
                 if(p[d] == min)
                     bestOf[d]++;
@@ -75,8 +70,7 @@ public class Analyzer
      * @param a general array of values
      * @param s names that correspond to array a
      */
-    public void print(double[] a, String[] s)
-    {
+    public void print(double[] a, String[] s){
         double[] ac = Arrays.copyOf(a,a.length);
         String[] sc = Arrays.copyOf(s,s.length);
         sort(ac,sc);
@@ -87,8 +81,7 @@ public class Analyzer
     /**
      * Outputs in a 2D way the contents of the results
      */
-    public void printResults()
-    {
+    public void printResults(){
         for(int i = 0; i < names.length; i++){
             System.out.print(names[i]);
             for(int j = 0; j < points[i].length; j++)
@@ -101,8 +94,7 @@ public class Analyzer
     /**
      * Outputs Averages
      */
-    public void printAverages()
-    {
+    public void printAverages(){
         System.out.println("Average Points");
         print(mean,names);
     }
@@ -110,8 +102,7 @@ public class Analyzer
     /**
      * Outputs Medians
      */
-    public void printMedians()
-    {
+    public void printMedians(){
         System.out.println("Medians");
         print(median, names);
     }
@@ -119,8 +110,7 @@ public class Analyzer
     /**
      * Outputs Standard Deviations
      */
-    public void printStandardDev()
-    {
+    public void printStandardDev(){
         System.out.println("Standard Deviations");
         print(std,names);
     }
@@ -128,8 +118,7 @@ public class Analyzer
     /**
      * Outputs Regrets
      */
-    public void printRegret()
-    {
+    public void printRegret(){
         System.out.println("Average Regret");
         print(regret,names);
     }
@@ -137,8 +126,7 @@ public class Analyzer
     /**
      * Outputs the number of times an agent did the best
      */
-    public void printBestOf()
-    {
+    public void printBestOf(){
         System.out.println("Instances Where Agent Was The Best");
         print(bestOf,names);
     }
@@ -148,14 +136,10 @@ public class Analyzer
      * @param a general array of values
      * @param s names for the elements in a
      */
-    public void sort(double[] a, String[] s)
-    {
-        for(int i = 0; i < a.length; i++)
-        {
-            for(int j = 0; j < a.length; j++)
-            {
-                if(a[j] < a[i])
-                {
+    public void sort(double[] a, String[] s){
+        for(int i = 0; i < a.length; i++){
+            for(int j = 0; j < a.length; j++){
+                if(a[j] < a[i]){
                     double tempA = a[j];
                     String tempS = s[j];
                     a[j] = a[i];
@@ -172,8 +156,7 @@ public class Analyzer
      * @param a general array of values
      * @return median of a
      */
-    public double median(double[] a)
-    {
+    public double median(double[] a){
         double[] m = Arrays.copyOf(a,a.length);
         Arrays.sort(m);
         if(m.length%2==0)//even
@@ -188,8 +171,7 @@ public class Analyzer
      * @param avg average of a
      * @return standard deviation of a
      */
-    public double std(double[] a, double avg)
-    {
+    public double std(double[] a, double avg){
         double[] m = Arrays.copyOf(a,a.length);
         double var = 0;
         for (double aM : m)
@@ -202,8 +184,7 @@ public class Analyzer
      * @param a general array of values
      * @return maximum value in a
      */
-    public double maximum(double[] a)
-    {
+    public double maximum(double[] a){
         double max = a[0];
         for(int i = 1; i < a.length; i++)
             if(max < a[i])
@@ -216,8 +197,7 @@ public class Analyzer
      * @param a general array of values
      * @return minimum value of a
      */
-    public double minimum(double[] a)
-    {
+    public double minimum(double[] a){
         double min = a[0];
         for(int i = 1; i < a.length; i++)
             if(min > a[i])

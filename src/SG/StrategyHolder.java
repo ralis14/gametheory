@@ -2,19 +2,19 @@ package SG;
 import java.util.*;
 /**
  * Auxiliary class for NFG. Keeps the Strategies nice and organized.
- * Updated to work for Security Games
+ * Updated to work for Security Games.
  * @author Oscar
- *
  */
+ 
 public class StrategyHolder {
 	private double[] ms1;
 	private double[] ms2;
+
 	/**
 	 * Default Constructor
 	 */
-	public StrategyHolder(){
-		
-	}
+	public StrategyHolder(){}
+	
 	/**
 	 * Store a strategy for a player
 	 * @param ms A strategy
@@ -26,7 +26,6 @@ public class StrategyHolder {
 		else
 			ms2 = Arrays.copyOf(ms,ms.length);
 	}
-
 	
 	/**
 	 * Get the stored strategy for a player
@@ -38,7 +37,4 @@ public class StrategyHolder {
 			return ms1;
 		return ms2;
 	}
-	
-	
-
 }
