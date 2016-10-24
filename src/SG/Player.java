@@ -77,7 +77,7 @@ public abstract class Player{
     /**
      * Player logic goes here in extended super agent. Do not try to edit this agent
      * @param g the game
-     * @return the defender coverage vector c, sum(c) <= m, forall t in T c(t) >=0 & c(t) <=1
+     * @return the defender coverage vector c, sum(c) &lt;= m, forall t in T c(t) &gt;=0 &amp; c(t) &lt;=1
      */
     protected double[] solveGame(GameModel g){
     	this.setGame(g);
@@ -86,7 +86,7 @@ public abstract class Player{
     
     /**
      * Wrapper for the solveGame function
-     * @return the mixed strategy developed by the player. vector c, sum(c) <= m, forall t in T c(t) >=0 & c(t) <=1
+     * @return the mixed strategy developed by the player. vector c, sum(c) $lt;= m, forall t in T c(t) &gt;=0 &amp; c(t) &lt;=1
      */
     protected double[] solveGame(){
     	return this.solveGame(this.game);

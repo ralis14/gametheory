@@ -2,7 +2,7 @@ package SG;
 
 import java.util.*;
 /**
- * Sample agent that always defends Target 0 and always attacks Target 0
+ * Sample agent that always defends a random target and always attacks a random target
  * @author Oscar
  * @version 2015.10.04
  */

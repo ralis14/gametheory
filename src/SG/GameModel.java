@@ -2,13 +2,13 @@ package SG;
 import java.util.*;
 import java.io.*;
 /****
- * Creates security games
- * T is the number of targets
- * m is the number of resources sum(c) &lt;= m
- * UAU Attacker Uncovered Utility
- * UAC Attacker Covered Utility
- * UDU Defender Uncovered Utility
- * UDC Defender Covered Utility
+ * Creates security games.
+ * T is the number of targets.
+ * m is the number of resources sum(c) &lt;= m.
+ * UAU Attacker Uncovered Utility.
+ * UAC Attacker Covered Utility.
+ * UDU Defender Uncovered Utility.
+ * UDC Defender Covered Utility.
  * 
  * @author Oscar Veliz
  */
