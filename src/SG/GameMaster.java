@@ -64,16 +64,17 @@ public class GameMaster {
 		Analyzer defenderResults = new Analyzer(defenderUtilities, names);
 		defenderResults.printResults();
         defenderResults.printAverages();
-        defenderResults.printMedians();
+        //defenderResults.printMedians();
         defenderResults.printRegret();
-        defenderResults.printMinimizer();
         System.out.println();
         System.out.println("Attacker Results");
         Analyzer attackerResults = new Analyzer(attackerUtilities, names);
         attackerResults.printResults();
         attackerResults.printAverages();
-        attackerResults.printMedians();
-        attackerResults.printRegret();
+        //attackerResults.printMedians();
+        //attackerResults.printRegret();
+        System.out.println("Attackers who punished the most");
+        defenderResults.printMinimizer();
 		System.exit(0);//just to make sure it exits
 	}
 
@@ -104,16 +105,13 @@ public class GameMaster {
 		for(int pd = 0; pd < p.size(); pd++)
 			drivers.add(new PlayerDriver(PlayerState.SOLVE,p.get(pd)));
 		for(int gameNumber = 0; gameNumber < numGames; gameNumber++){
-			GameModel mg = new GameModel(gameNumber);//gives the agent a copy of the game
+			GameModel g = new GameModel(gameNumber);//gives the agent a copy of the game
 			for(int playerIndex = 0; playerIndex < p.size(); playerIndex++){
 				Player player = p.get(playerIndex);
-				//for(int playerNumber = 1; playerNumber <= 2; playerNumber++){
 				player.setGame(gameNumber);
-				player.setGame(mg);
-				//player.setPlayerNumber(playerNumber);
+				player.setGame(g);
 				player.setDefender();
 				tryPlayer(new PlayerDriver(PlayerState.SOLVE,player));
-				//}
 			}				
 		}
 	}
