@@ -145,7 +145,7 @@ public class GameModel{
 	  *	@return true if valid, false otherwise
 	  */
 	 public boolean isValidCoverage(double[] C){
-		if(C.length != T)
+		if(C == null || C.length != T)
 			return false;
 		double sum = 0;
 		for(int i = 0; i < T; i++){

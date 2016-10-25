@@ -25,6 +25,8 @@ public class GameMaster {
 		ArrayList<Player> players = new ArrayList<Player>();
 		players.add(new UniformRandom());
 		players.add(new SolidRock());
+		players.add(new RelentlessAssault());
+		players.add(new Solidarity());
 		//add your agent(s) here
 		
 		//create games
@@ -126,13 +128,27 @@ public class GameMaster {
 	 */
 	public static double[] match(Player d, Player a, int gameNumber){
 		double[] coverage = d.getStrategy(gameNumber);
-		a.setAttacker();
-		a.setGame(gameNumber);
-		a.setC(coverage);
-		tryPlayer(new PlayerDriver(PlayerState.SOLVE,a));
-		int t = a.getT();
 		GameModel g = new GameModel(gameNumber);
-		double[] payoffs = g.computePayoffs(coverage,t);
+		double[] payoffs = new double[2];
+		if(!g.isValidCoverage(coverage)){//invalid coverage do not even bother executing match. give -1337 to defender and 0 to attacker
+			if(verbose)System.out.println(d.getName()+" has invalid coverage vector for game "+gameNumber);
+			payoffs[0] = -1337;
+			payoffs[1] = 0;
+		}
+		else{
+			a.setAttacker();
+			a.setGame(gameNumber);
+			a.setC(coverage);
+			tryPlayer(new PlayerDriver(PlayerState.SOLVE,a));
+			int t = a.getT();
+			if(!g.isValidTarget(t)){//invalid target attacked assign 0 to defender and -1337 to attacker
+				if(verbose)System.out.println(a.getName()+" has invalid target for game "+gameNumber);
+				payoffs[0] = 0;
+				payoffs[1] = -1337;
+			}
+			else
+				payoffs = g.computePayoffs(coverage,t);
+		}
 		return payoffs;
 	}
 	
