@@ -153,7 +153,7 @@ public class GameModel{
 				return false;
 			sum+=C[i];
 		}
-		return sum <= m;
+		return sum <= (m+.01);
 	 }
 	 /**
 	  * is valid target to attack
