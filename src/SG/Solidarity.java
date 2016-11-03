@@ -27,7 +27,7 @@ public class Solidarity extends Player {
 		double[] coverage = new double[g.getT()];
 		int resources = g.getM();
 		for (int i = 0; i < coverage.length; i++) {
-			coverage[i] = resources / coverage.length;
+			coverage[i] = resources / (double) coverage.length;
 		}
 		return coverage;
 	}
