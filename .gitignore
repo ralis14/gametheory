@@ -52,3 +52,7 @@ Temporary Items
 *.js
 ${doc.dir}/package-list
 *.tmp
+
+#intelliJ files 
+*.iml
+.idea
