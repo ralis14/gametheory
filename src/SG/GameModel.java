@@ -117,7 +117,7 @@ public class GameModel{
 	/**
 	 * Set payoffs
 	 * @param uac new attacker covered payoffs
-	 * @param uau new attacer uncovered payoffs
+	 * @param uau new attacker uncovered payoffs
 	 * @param udc new defender covered payoffs
 	 * @param udu new defender uncovered payoffs
 	 */
