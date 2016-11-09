@@ -27,7 +27,9 @@ public class GameMaster {
 		players.add(new SolidRock());
 		players.add(new RelentlessAssault());
 		players.add(new Solidarity());
+
 		//add your agent(s) here
+		players.add(new MyAgent());
 		
 		//create games
 		for(int i = 0; i < numGames; i++)
