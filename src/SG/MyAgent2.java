@@ -1,13 +1,18 @@
-/**
- * My Agent is an Attack strategy that goes for the second highest pay off always, since most people will lean to defend the biggest pay off
- * i believe this strategy will beat an average defender.
- */
-
 package SG;
 
-public class MyAgent extends Player{
-    private final String newName = "MyAgent";
-    public MyAgent(){
+/**
+ * Created by Raul on 11/9/2016.
+ * Some code was modified from Oscar, author of the game.
+ */
+
+
+/**
+ * Find the highest payoff and protect, with the rest of the resources spread them evenly between the rest of the targets
+ * for a small insurance.
+ */
+public class MyAgent2 extends Player{
+    private final String newName = "MyAgent2";
+    public MyAgent2(){
         super();
         playerName = newName;
     }
@@ -38,10 +43,10 @@ public class MyAgent extends Player{
             }
         }
         coverage[maxIndex] = 1;
-        coverage[secondMaxIndex] = 1;
+       // coverage[secondMaxIndex] = 1;
 
         //cover all targets equally with left over resources
-        for(int i = 0; i<resources-2; i++){
+        for(int i = 0; i<resources-1; i++){
             //if((coverage[i] != coverage[maxIndex]) || (coverage[i] != coverage[secondMaxIndex])){
             coverage[i] = resources / (double)coverage.length;
             //}
@@ -53,57 +58,28 @@ public class MyAgent extends Player{
 
     /**
      *
-     * Attack Second Highest
+     * Find the computed highest payoff and record its index, return index to choose that option to attack
      * @param g game model
      * @param coverage
      * @return
      */
     protected int attackTarget(GameModel g, double[] coverage){
-        int[] UAU = g.getPayoffs()[1];
-        int[] UAC = g.getPayoffs()[0];
 
         int maxIndex = 0;
-        int secondMaxIndex = 0;
 
         double maxValue = Double.MIN_VALUE;
-        double secondMax = Double.MIN_VALUE;
 
         for(int i = 0; i<coverage.length; i++){
-            if(coverage[i] == 0){
-                if(UAU[i] > maxValue){
-                    maxValue = UAU[i];
+            if(coverage[i] < 1){
+                double[] one = g.computePayoffs(coverage, i);
+                 if (one[1] > maxValue){
+                    maxValue = one[1];
                     maxIndex = i;
-                }
-                else{
-                    if(UAU[i] > secondMax){
-                        secondMax = UAU[i];
-                        secondMaxIndex = i;
-                    }
-                }
-            }
-            else{
-                double targetValue = UAC[i] * coverage[i];
-                if(targetValue > maxValue){
-                    maxValue = targetValue;
-                }
-                else{
-                    if(targetValue > secondMax){
-                        secondMax = targetValue;
-                        secondMaxIndex = i;
-                    }
-                }
+                 }
             }
         }
 
         return maxIndex;
     }
 
-    public boolean contains(int[] a, int value){
-        for(int b: a){
-            if (b == value)
-                return true;
-        }
-        return false;
-    }
 }
-

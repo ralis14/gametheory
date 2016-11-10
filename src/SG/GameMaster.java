@@ -30,7 +30,8 @@ public class GameMaster {
 
 		//add your agent(s) here
 		players.add(new MyAgent());
-		
+		players.add(new MyAgent2());
+
 		//create games
 		for(int i = 0; i < numGames; i++)
 			games.add(new GameModel(i));
