@@ -56,3 +56,5 @@ ${doc.dir}/package-list
 #intelliJ files 
 *.iml
 .idea
+*.doc
+*.docx
